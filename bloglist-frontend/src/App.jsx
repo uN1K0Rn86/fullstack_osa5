@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
+import AddBlogForm from './components/AddBlogForm'
 import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -12,6 +13,9 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -59,6 +63,31 @@ const App = () => {
     setUser(null)
   }
 
+  const handleAddBlog = async (event) => {
+    event.preventDefault()
+    const newBlog = {
+      title: title,
+      author: author,
+      url: url
+    }
+    
+    try {
+      blogService
+        .create(newBlog)
+        .then(returnedBlog => {
+          setBlogs(blogs.concat(returnedBlog.data))
+          setTitle('')
+          setAuthor('')
+          setUrl('')
+        })
+    } catch (exception) {
+      setErrorMessage('Error')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
   return (
     <div>
       {!user && 
@@ -74,6 +103,16 @@ const App = () => {
           <User
             user={user}
             handleLogout={handleLogout}
+          />
+          <br/>
+          <AddBlogForm
+            handleAddBlog={handleAddBlog}
+            title={title}
+            setTitle={setTitle}
+            author={author}
+            setAuthor={setAuthor}
+            url={url}
+            setUrl={setUrl}
           />
           <br/>
           <BlogList 

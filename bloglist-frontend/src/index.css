@@ -1,0 +1,42 @@
+body {
+    background-color: #edc4a8;
+}
+
+table {
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: black;
+}
+
+th{
+    padding: 8px;
+}
+
+td{
+    padding: 5px;
+}
+
+th, td {
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    text-align: left;
+}
+
+button {
+    background-color: blanchedalmond;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 3px 5px;
+}
+
+button:hover {
+    background-color: #cae8e4;
+  }
+
+input {
+    background-color: silver;
+    padding: 2px;
+    border: 1px solid black;
+    border-radius: 5px;
+}

@@ -1,14 +1,23 @@
-import Blog from "./Blog"
-
-const BlogList = ({ blogs, user }) => {
+const BlogList = ({ blogs }) => {
     return (
       <div>
-        <h2>Blogs</h2>
-        {user.name} logged in
-        <br/><br/>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                </tr>
+            </thead>
+            <tbody>
+            {blogs.map(blog =>
+                <tr key={blog.id}>
+                    <td>{blog.title}</td>
+                    <td>{blog.author}</td>
+                </tr>
+            )}
+            </tbody>
+        </table>
+        
       </div>
     )
 }

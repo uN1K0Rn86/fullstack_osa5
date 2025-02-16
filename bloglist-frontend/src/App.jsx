@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
+import User from './components/User'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './index.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -49,19 +51,35 @@ const App = () => {
     }
   }
 
+  const handleLogout = async (event) => {
+    event.preventDefault()
+
+    window.localStorage.removeItem('loggedBlogappUser')
+
+    setUser(null)
+  }
+
   return (
     <div>
-      {!user && <LoginForm
-                  handleLogin={handleLogin}
-                  username={username}
-                  setUsername={setUsername}
-                  password={password}
-                  setPassword={setPassword}
-                />}
-      {user && <BlogList 
-                  blogs={blogs}
-                  user={user}
-                />}
+      {!user && 
+        <LoginForm
+          handleLogin={handleLogin}
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+        />}
+      {user &&  (<div>
+          <h2>Blogs</h2>
+          <User
+            user={user}
+            handleLogout={handleLogout}
+          />
+          <br/>
+          <BlogList 
+            blogs={blogs}
+          />
+        </div>)}
     </div>
   )
 }

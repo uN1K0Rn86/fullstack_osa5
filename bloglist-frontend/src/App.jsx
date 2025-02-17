@@ -3,6 +3,8 @@ import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import AddBlogForm from './components/AddBlogForm'
 import User from './components/User'
+import Notification from './components/Notification'
+import Error from './components/Error'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
@@ -10,6 +12,7 @@ import './index.css'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
+  const [notificationMessage, setNotificationMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -47,6 +50,10 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setNotificationMessage(`${user.username} successfully logged in`)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
     } catch (exception) {
       setErrorMessage('Incorrect username or password')
       setTimeout(() => {
@@ -58,9 +65,16 @@ const App = () => {
   const handleLogout = async (event) => {
     event.preventDefault()
 
+    const loggedOutUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    const loggedOutUser = JSON.parse(loggedOutUserJSON)
+
     window.localStorage.removeItem('loggedBlogappUser')
 
     setUser(null)
+    setNotificationMessage(`${loggedOutUser.username} successfully logged out`)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
   }
 
   const handleAddBlog = async (event) => {
@@ -72,16 +86,24 @@ const App = () => {
     }
     
     try {
-      blogService
-        .create(newBlog)
-        .then(returnedBlog => {
-          setBlogs(blogs.concat(returnedBlog.data))
-          setTitle('')
-          setAuthor('')
-          setUrl('')
-        })
+      const returnedBlog = await blogService.create(newBlog)
+      
+      setBlogs(blogs.concat(returnedBlog.data))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      
+      setNotificationMessage(`Blog ${returnedBlog.data.title} by ${returnedBlog.data.author} successfully added.`)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
     } catch (exception) {
-      setErrorMessage('Error')
+      let exceptionMessage = 'Unable to add blog'
+      if (exception.response.data) {
+        exceptionMessage = exception.response.data.error || exceptionMessage
+      }
+
+      setErrorMessage(exceptionMessage)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
@@ -90,6 +112,8 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={notificationMessage} />
+      <Error message={errorMessage} />
       {!user && 
         <LoginForm
           handleLogin={handleLogin}

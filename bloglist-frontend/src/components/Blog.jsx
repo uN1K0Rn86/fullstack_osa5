@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({ blog, like }) => {
+const Blog = ({ blog, like, username, remove }) => {
     const [showInfo, setShowInfo] = useState(false)
 
     const infoShown = { display: showInfo ? '' : 'none' }
@@ -17,7 +17,16 @@ const Blog = ({ blog, like }) => {
         like(id, likedBlog)
     }
 
+    const deleteBlog = () => {
+        const id = blog.id
+        remove(id)
+    }
+
     const user = blog.user
+
+    const isOwner = user
+        ? username === user.username
+        : false
 
     return (
         <>
@@ -28,7 +37,8 @@ const Blog = ({ blog, like }) => {
                 <td>{blog.author}</td>
                 <td><button 
                         type="submit"
-                        onClick={toggleInfo}>Show More</button>
+                        onClick={toggleInfo}>Show More
+                    </button><br/>
                 </td>
             </tr>
             <tr style={infoShown}>
@@ -41,7 +51,13 @@ const Blog = ({ blog, like }) => {
                 <td>{blog.author}</td>
                 <td><button 
                         type="submit"
-                        onClick={toggleInfo}>Show Less</button>
+                        onClick={toggleInfo}>Show Less
+                    </button><br/>
+                    {isOwner && 
+                    <><br/><button
+                        type="submit"
+                        onClick={deleteBlog}>Remove
+                    </button></>}
                 </td>
             </tr>
         </>

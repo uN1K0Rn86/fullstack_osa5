@@ -1,6 +1,6 @@
 import Blog from "./Blog"
 
-const BlogList = ({ blogs, like }) => {
+const BlogList = ({ blogs, like, username, remove }) => {
     const columnStyle = {
         minWidth: '250px'
     }
@@ -12,7 +12,7 @@ const BlogList = ({ blogs, like }) => {
                 <tr>
                     <th style={columnStyle}>Info</th>
                     <th>Author</th>
-                    <th></th>
+                    <th>Functions</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,6 +21,8 @@ const BlogList = ({ blogs, like }) => {
                     key={blog.id}
                     blog={blog}
                     like={like}
+                    username={username}
+                    remove={remove}
                 />
             )}
             </tbody>

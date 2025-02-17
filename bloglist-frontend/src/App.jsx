@@ -79,7 +79,8 @@ const App = () => {
     try {
       formRef.current.toggleVisibility()
       const returnedBlog = await blogService.create(newBlog)
-      setBlogs(blogs.concat(returnedBlog.data))
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
       
       setNotificationMessage(`Blog '${returnedBlog.data.title}' by ${returnedBlog.data.author} successfully added.`)
       setTimeout(() => {
@@ -109,13 +110,30 @@ const App = () => {
         setNotificationMessage(null)
       }, 5000
     )} catch (exception) {
-      console.log(exception)
       let exceptionMessage = 'Could not like this blog'
       setErrorMessage(exceptionMessage)
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     }
+  }
+
+  const deleteBlog = async (id) => {
+    try {
+      const removedBlog = await blogService.remove(id)
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
+
+      setNotificationMessage(`Blog successfully deleted`)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000
+    )} catch (exception) {
+      let exceptionMessage = 'Could not delete this blog'
+      setErrorMessage(exceptionMessage)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)}
   }
 
   const formRef = useRef()
@@ -146,6 +164,8 @@ const App = () => {
           <BlogList 
             blogs={blogs}
             like={addLike}
+            username={user.username}
+            remove={deleteBlog}
           />
         </div>)}
     </div>

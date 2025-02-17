@@ -1,19 +1,26 @@
+import Blog from "./Blog"
+
 const BlogList = ({ blogs }) => {
+    const columnStyle = {
+        minWidth: '250px'
+    }
+
     return (
       <div>
         <table>
             <thead>
                 <tr>
-                    <th>Title</th>
+                    <th style={columnStyle}>Info</th>
                     <th>Author</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
             {blogs.map(blog =>
-                <tr key={blog.id}>
-                    <td>{blog.title}</td>
-                    <td>{blog.author}</td>
-                </tr>
+                <Blog
+                    key={blog.id}
+                    blog={blog}
+                />
             )}
             </tbody>
         </table>

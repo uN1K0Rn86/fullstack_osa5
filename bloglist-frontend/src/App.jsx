@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import Togglable from './components/Togglable'
 import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import AddBlogForm from './components/AddBlogForm'
@@ -86,6 +87,7 @@ const App = () => {
     }
     
     try {
+      formRef.current.toggleVisibility()
       const returnedBlog = await blogService.create(newBlog)
       
       setBlogs(blogs.concat(returnedBlog.data))
@@ -93,7 +95,7 @@ const App = () => {
       setAuthor('')
       setUrl('')
       
-      setNotificationMessage(`Blog ${returnedBlog.data.title} by ${returnedBlog.data.author} successfully added.`)
+      setNotificationMessage(`Blog '${returnedBlog.data.title}' by ${returnedBlog.data.author} successfully added.`)
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000)
@@ -109,6 +111,8 @@ const App = () => {
       }, 5000)
     }
   }
+
+  const formRef = useRef()
 
   return (
     <div>
@@ -129,15 +133,17 @@ const App = () => {
             handleLogout={handleLogout}
           />
           <br/>
-          <AddBlogForm
-            handleAddBlog={handleAddBlog}
-            title={title}
-            setTitle={setTitle}
-            author={author}
-            setAuthor={setAuthor}
-            url={url}
-            setUrl={setUrl}
-          />
+          <Togglable buttonLabel='Add New Blog' ref={formRef}>
+            <AddBlogForm
+              handleAddBlog={handleAddBlog}
+              title={title}
+              setTitle={setTitle}
+              author={author}
+              setAuthor={setAuthor}
+              url={url}
+              setUrl={setUrl}
+            />
+          </Togglable>
           <br/>
           <BlogList 
             blogs={blogs}

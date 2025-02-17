@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, like }) => {
     const [showInfo, setShowInfo] = useState(false)
 
     const infoShown = { display: showInfo ? '' : 'none' }
@@ -11,7 +11,10 @@ const Blog = ({ blog }) => {
     }
 
     const addLike = () => {
-        console.log('Liked')
+        const id = blog.id
+        const likedBlog = { ...blog }
+        likedBlog.likes = blog.likes + 1
+        like(id, likedBlog)
     }
 
     const user = blog.user
@@ -32,7 +35,7 @@ const Blog = ({ blog }) => {
                 <td>
                     {blog.title}<br/>
                     {blog.url}<br/>
-                    Likes {blog.likes} <button type="submit" onClick={addLike}>Like</button><br/>
+                    Likes: {blog.likes} <button type="submit" onClick={addLike}>Like</button><br/>
                     {user?.username || 'User not found'}
                 </td>
                 <td>{blog.author}</td>

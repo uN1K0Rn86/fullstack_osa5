@@ -1,6 +1,6 @@
 import Blog from "./Blog"
 
-const BlogList = ({ blogs }) => {
+const BlogList = ({ blogs, like }) => {
     const columnStyle = {
         minWidth: '250px'
     }
@@ -20,6 +20,7 @@ const BlogList = ({ blogs }) => {
                 <Blog
                     key={blog.id}
                     blog={blog}
+                    like={like}
                 />
             )}
             </tbody>

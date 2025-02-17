@@ -98,6 +98,25 @@ const App = () => {
     }
   }
 
+  const addLike = async (id, likedBlog) => {
+    try {
+      const returnedBlog = await blogService.update(id, likedBlog)
+      setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+
+      setNotificationMessage(`Liked ${returnedBlog.title} by ${returnedBlog.author}`)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000
+    )} catch (exception) {
+      console.log(exception)
+      let exceptionMessage = 'Could not like this blog'
+      setErrorMessage(exceptionMessage)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
   const formRef = useRef()
 
   return (
@@ -125,6 +144,7 @@ const App = () => {
           <br/>
           <BlogList 
             blogs={blogs}
+            like={addLike}
           />
         </div>)}
     </div>

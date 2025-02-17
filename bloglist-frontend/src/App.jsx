@@ -118,9 +118,10 @@ const App = () => {
     }
   }
 
-  const deleteBlog = async (id) => {
+  const deleteBlog = async (removedBlog) => {
     try {
-      const removedBlog = await blogService.remove(id)
+      if (window.confirm(`Delete '${removedBlog.title}' by ${removedBlog.author}?`)) {
+      await blogService.remove(removedBlog.id)
       const blogs = await blogService.getAll()
       setBlogs(blogs)
 
@@ -128,7 +129,7 @@ const App = () => {
       setTimeout(() => {
         setNotificationMessage(null)
       }, 5000
-    )} catch (exception) {
+    )}} catch (exception) {
       let exceptionMessage = 'Could not delete this blog'
       setErrorMessage(exceptionMessage)
       setTimeout(() => {

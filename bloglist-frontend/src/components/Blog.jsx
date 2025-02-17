@@ -19,7 +19,7 @@ const Blog = ({ blog, like, username, remove }) => {
 
     const deleteBlog = () => {
         const id = blog.id
-        remove(id)
+        remove(blog)
     }
 
     const user = blog.user

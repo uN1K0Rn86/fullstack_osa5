@@ -1,24 +1,43 @@
-const AddBlogForm = (props) => {
+import { useState } from "react"
+
+const AddBlogForm = ({ createBlog }) => {
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
+
     const formstyle = {
         display: 'grid',
         gridTemplateColumns: '100px 150px',
         gap: '5px'
     }
 
+    const addBlog = (event) => {
+        event.preventDefault()
+        createBlog({
+            title: title,
+            author: author,
+            url: url
+        })
+
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+    }
+
     return (
         <div>
             <h3>Add a New Blog</h3>
-            <form onSubmit={props.handleAddBlog} style={formstyle}>
+            <form onSubmit={addBlog} style={formstyle}>
                 <div>
                     <label htmlFor="title">Title: </label>
                 </div>
                 <div>
                     <input
                         type="text"
-                        value={props.title}
+                        value={title}
                         id="title"
                         name="Title"
-                        onChange={({ target }) => props.setTitle(target.value)}
+                        onChange={({ target }) => setTitle(target.value)}
                     />
                 </div>
                 <div>
@@ -27,10 +46,10 @@ const AddBlogForm = (props) => {
                 <div>
                     <input
                         type="text"
-                        value={props.author}
+                        value={author}
                         id="author"
                         name="Author"
-                        onChange={({ target }) => props.setAuthor(target.value)}
+                        onChange={({ target }) => setAuthor(target.value)}
                     />
                 </div>
                 <div>
@@ -39,10 +58,10 @@ const AddBlogForm = (props) => {
                 <div>
                     <input
                         type="text"
-                        value={props.url}
+                        value={url}
                         id="url"
                         name="Url"
-                        onChange={({ target }) => props.setUrl(target.value)}
+                        onChange={({ target }) => setUrl(target.value)}
                     />
                 </div>
                 <div>

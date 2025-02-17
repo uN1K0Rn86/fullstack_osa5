@@ -101,7 +101,8 @@ const App = () => {
   const addLike = async (id, likedBlog) => {
     try {
       const returnedBlog = await blogService.update(id, likedBlog)
-      setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
 
       setNotificationMessage(`Liked ${returnedBlog.title} by ${returnedBlog.author}`)
       setTimeout(() => {

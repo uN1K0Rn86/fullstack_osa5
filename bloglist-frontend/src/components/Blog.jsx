@@ -1,4 +1,5 @@
-import { useState } from "react"
+import PropTypes from 'prop-types'
+import { useState } from 'react'
 
 const Blog = ({ blog, like, username, remove }) => {
     const [showInfo, setShowInfo] = useState(false)
@@ -35,10 +36,10 @@ const Blog = ({ blog, like, username, remove }) => {
                     {blog.title}
                 </td>
                 <td>{blog.author}</td>
-                <td><button 
-                        type="submit"
-                        onClick={toggleInfo}>Show More
-                    </button><br/>
+                <td><button
+                    type="submit"
+                    onClick={toggleInfo}>Show More
+                </button><br/>
                 </td>
             </tr>
             <tr style={infoShown}>
@@ -49,11 +50,11 @@ const Blog = ({ blog, like, username, remove }) => {
                     {user?.username || 'User not found'}
                 </td>
                 <td>{blog.author}</td>
-                <td><button 
-                        type="submit"
-                        onClick={toggleInfo}>Show Less
-                    </button><br/>
-                    {isOwner && 
+                <td><button
+                    type="submit"
+                    onClick={toggleInfo}>Show Less
+                </button><br/>
+                {isOwner &&
                     <><br/><button
                         type="submit"
                         onClick={deleteBlog}>Remove
@@ -62,6 +63,13 @@ const Blog = ({ blog, like, username, remove }) => {
             </tr>
         </>
     )
+}
+
+Blog.propTypes = {
+    blog: PropTypes.object.isRequired,
+    like: PropTypes.func.isRequired,
+    username: PropTypes.string.isRequired,
+    remove: PropTypes.func.isRequired
 }
 
 export default Blog

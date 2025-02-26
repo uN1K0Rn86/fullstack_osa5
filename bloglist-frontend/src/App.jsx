@@ -125,7 +125,7 @@ const App = () => {
                 const blogs = await blogService.getAll()
                 setBlogs(blogs)
 
-                setNotificationMessage('Blog successfully deleted')
+                setNotificationMessage(`Blog '${removedBlog.title}' by ${removedBlog.author} successfully deleted`)
                 setTimeout(() => {
                     setNotificationMessage(null)
                 }, 5000

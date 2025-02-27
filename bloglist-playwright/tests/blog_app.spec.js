@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, addNewBlog, openBlogInfo } = require('./helper')
+const { loginWith, addNewBlog, openBlogInfo, logout } = require('./helper')
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
@@ -9,6 +9,13 @@ describe('Blog app', () => {
                 name: 'Ben Adaephon Delat',
                 username: 'QuickBen',
                 password: 'Kalam4eva'
+            }
+        })
+        await request.post('api/users', {
+            data: {
+                name: 'Kellanved',
+                username: 'Shadowthrone',
+                password: 'D4ncer'
             }
         })
 
@@ -87,6 +94,20 @@ describe('Blog app', () => {
             const notifyDiv = await page.locator('.notification')
             await expect(notifyDiv).toContainText('successfully deleted')
             await expect(page.getByText('Blankets and their Many Uses')).not.toBeVisible()
+        })
+
+        test('the remove button is not visible if the blog was added by another user', async ({ page }) => {
+            const row = await page.locator('tr', { name: 'Blankets and their Many Uses' })
+            openBlogInfo(page, row)
+            await expect(row.locator('button', { hasText: 'Remove' })).toBeVisible()
+            logout(page)
+            loginWith(page, 'Shadowthrone', 'D4ncer')
+
+            await page.getByText('Kellanved logged in').waitFor()
+            const newRow = await page.locator('tr', { name: 'Blankets and their Many Uses' })
+            openBlogInfo(page, newRow)
+            await expect(newRow.locator('button', { hasText: 'Show Less' })).toBeVisible()
+            await expect(newRow.locator('button', { hasText: 'Remove' })).not.toBeVisible()
         })
     })
 })

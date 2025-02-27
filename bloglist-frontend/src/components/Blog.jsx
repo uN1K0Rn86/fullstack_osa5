@@ -46,7 +46,8 @@ const Blog = ({ blog, like, username, remove }) => {
                 <td>
                     {blog.title}<br/>
                     {blog.url}<br/>
-                    Likes: {blog.likes} <button type="submit" onClick={addLike}>Like</button><br/>
+                    <span>Likes: {blog.likes} </span>
+                    <button type="submit" onClick={addLike}>Like</button><br/>
                     {user?.username || 'User not found'}
                 </td>
                 <td>{blog.author}</td>

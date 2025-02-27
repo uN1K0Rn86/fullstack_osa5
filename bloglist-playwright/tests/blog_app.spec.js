@@ -38,6 +38,12 @@ describe('Blog app', () => {
     describe('When logged in', () => {
         beforeEach(async ({ page }) => {
             loginWith(page, 'QuickBen', 'Kalam4eva')
+            addNewBlog(
+                page,
+                'Blankets and their Many Uses',
+                'Tehol Beddict',
+                'https://letheras.blogspot.com'
+            )
         })
 
         test('a new blog can be created', async ({ page }) => {
@@ -51,6 +57,22 @@ describe('Blog app', () => {
             const notifyDiv = await page.locator('.notification')
             await expect(page.getByRole('cell', { name: 'Ben Delat' })).toBeVisible()
             await expect(notifyDiv).toContainText('Walking in Walls (Capustan style)')
+        })
+
+        test('a blog can be liked', async ({ page }) => {
+            const row = await page.locator('tr', { name: 'Blankets and their Many Uses' })
+            await row.locator('button', { hasText: 'Show More' }).click()
+            await page.waitForTimeout(500)
+
+            const likesText = await row.locator('span:has-text("Likes:")').textContent()
+            const likes = parseInt(likesText.replace('Likes: ', ''), 10)
+            await row.locator('button', { hasText: 'Like' }).click()
+            await page.waitForTimeout(500)
+
+            const newLikesText = await row.locator('span:has-text("Likes:")').textContent()
+            const newLikes = parseInt(newLikesText.replace('Likes: ', ''), 10)
+
+            await expect(newLikes - likes).toEqual(1)
         })
     })
 })

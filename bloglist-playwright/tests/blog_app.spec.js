@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, addNewBlog } = require('./helper')
+const { loginWith, addNewBlog, openBlogInfo } = require('./helper')
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
@@ -61,8 +61,7 @@ describe('Blog app', () => {
 
         test('a blog can be liked', async ({ page }) => {
             const row = await page.locator('tr', { name: 'Blankets and their Many Uses' })
-            await row.locator('button', { hasText: 'Show More' }).click()
-            await page.waitForTimeout(500)
+            openBlogInfo(page, row)
 
             const likesText = await row.locator('span:has-text("Likes:")').textContent()
             const likes = parseInt(likesText.replace('Likes: ', ''), 10)
@@ -73,6 +72,21 @@ describe('Blog app', () => {
             const newLikes = parseInt(newLikesText.replace('Likes: ', ''), 10)
 
             await expect(newLikes - likes).toEqual(1)
+        })
+
+        test('a blog can be deleted by the user who added it', async ({ page }) => {
+            const row = await page.locator('tr', { name: 'Blankets and their Many Uses' })
+            openBlogInfo(page, row)
+
+            page.on('dialog', async (dialog) => {
+                await dialog.accept()
+            })
+            await row.locator('button', { hasText: 'Remove' }).click()
+            await page.waitForTimeout(500)
+
+            const notifyDiv = await page.locator('.notification')
+            await expect(notifyDiv).toContainText('successfully deleted')
+            await expect(page.getByText('Blankets and their Many Uses')).not.toBeVisible()
         })
     })
 })

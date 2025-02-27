@@ -15,4 +15,10 @@ const addNewBlog = async (page, title, author, url) => {
     await page.getByRole('cell', { name: author }).waitFor()
 }
 
-export { loginWith, addNewBlog }
+const openBlogInfo = async (page, blogName) => {
+    const row = await page.locator('tr', { name: blogName })
+    await row.locator('button', { hasText: 'Show More' }).click()
+    await page.waitForTimeout(500)
+}
+
+export { loginWith, addNewBlog, openBlogInfo }
